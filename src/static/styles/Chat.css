@@ -1,0 +1,224 @@
+.chat-widget{
+  width: 500px;
+  height: 90%;
+  min-height: 200px;
+  max-height: 500px;
+  box-shadow: 2px 10px 40px rgba(22,20,19,0.4);
+  border-radius: 20px;
+  margin: auto;
+  position: relative;
+}
+
+@media only screen and (max-width: 600px) {
+  .chat-widget{
+    width: 90%;
+  }
+}
+
+/*  
+    ------------------------
+          Top Section 
+    ------------------------
+*/
+.chat-widget .top{
+  height: 9%;
+  border-bottom: 1px solid #dadada;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background-color: #dadada2b;
+}
+
+.buttons{
+  float: right;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.buttons #exit{
+  width: 15px;
+  height: 15px;
+  background-color: rgb(241, 74, 64);
+  border-radius: 50%;
+  margin: 5px;
+  display: flex;
+  text-align: center;
+}
+
+.buttons #minimize{
+  width: 15px;
+  height: 15px;
+  background-color: #FFC107;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+/*  
+    ------------------------
+        Middle Section 
+    ------------------------
+*/
+.chat-widget .chat{
+  overflow-y: scroll;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: calc(91% - 60px); 
+  margin-top: 5px;
+}
+
+.chat .bubble p{
+  margin: 0;
+}
+
+.chat .bubble{
+  display: flex;
+  align-items: flex-end;
+}
+
+.chat .bubble .text-bubble, .chat .bubble.user .text-bubble{
+  border: 1px solid #dadada;
+  max-width: 70%;
+  margin: 0;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.chat .bubble.user .text-bubble{
+  margin-top: 6px;
+  margin-left: auto;
+  margin-right: 5px;
+  /*clear: both;*/
+  /*float: right;*/
+  border-bottom-right-radius: 0px;
+  animation: bounce 500ms linear both;
+  animation-delay: .2s;
+}
+
+.chat .bubble.bot .text-bubble{
+  /*float: left;*/
+  margin-top: 25px;
+  border-bottom-left-radius: 0px;
+  background-color: #F2FCFE;
+  animation: bounce 500ms linear both;
+  animation-delay: .2s;
+}
+
+.chat .bubble.bot:first-child .image{
+   /*margin-top: 45px;*/
+}
+
+.chat .bubble.bot .image{
+  /*clear: both;*/
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  margin: 5px;
+  margin-bottom: -15px;
+  /*margin-top: 60px;*/
+  /*float:left;*/
+  background-image: url("https://lqp-p-imgs.s3-ap-south-1.amazonaws.com/faceview/jd/a1f/gc/ae/affimgs/az-large-4620593.jpg");
+}
+/*  
+    ------------------------------
+         Formatting Responses 
+    ------------------------------
+*/
+.format-question{
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 10px;
+}
+
+.table-response{
+  border-top: 1px solid #dadada;
+  padding: 10px;
+}
+
+span.changed{
+  border-bottom: 1px dotted;
+  background-color: #ffff0040;
+}
+
+/*  
+    ----------------------------
+         Yes and No buttons 
+    ----------------------------
+*/
+
+.button-yes, .button-no{
+  margin-top: 10px;
+  border: 1px solid #dadada;
+  border-radius: 5px;
+}
+
+.button-yes, .button-no:focus{
+  outline: none;
+}
+/*  
+    ------------------------
+        Bottom Section 
+    ------------------------
+*/
+.chat-widget .bottom{
+  background-color: white;
+}
+
+.chat-widget .bottom input[type=text]{
+  width: calc(100% - 90px);
+  padding: 10px;
+  padding-right: 60px;
+  font-size: 14px;
+  margin: 10px;
+  position: absolute;
+  bottom: 0;
+  border-radius: 20px;
+  border: 1px solid #dadada;
+  color: #5f5e5e;
+}
+
+.chat-widget .bottom input[type=text]:focus{
+  outline: none;
+}
+
+.chat-widget .bottom button{
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  border: none;
+}
+
+.chat-widget .bottom button:focus{
+  outline: none;
+}
+
+path.active{
+  fill: #62bcce;
+}
+
+/*  
+    ----------------------------------------------------------------------------
+          Animation created by Fabio Ottaviani (https://codepen.io/supah) 
+    ----------------------------------------------------------------------------
+*/
+
+@keyframes bounce { 
+  0% { transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  4.7% { transform: matrix3d(0.45, 0, 0, 0, 0, 0.45, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  9.41% { transform: matrix3d(0.883, 0, 0, 0, 0, 0.883, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  14.11% { transform: matrix3d(1.141, 0, 0, 0, 0, 1.141, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  18.72% { transform: matrix3d(1.212, 0, 0, 0, 0, 1.212, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  24.32% { transform: matrix3d(1.151, 0, 0, 0, 0, 1.151, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  29.93% { transform: matrix3d(1.048, 0, 0, 0, 0, 1.048, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  35.54% { transform: matrix3d(0.979, 0, 0, 0, 0, 0.979, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  41.04% { transform: matrix3d(0.961, 0, 0, 0, 0, 0.961, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  52.15% { transform: matrix3d(0.991, 0, 0, 0, 0, 0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  63.26% { transform: matrix3d(1.007, 0, 0, 0, 0, 1.007, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  85.49% { transform: matrix3d(0.999, 0, 0, 0, 0, 0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+  100% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); } 
+}

@@ -1,0 +1,42 @@
+/*  
+    Credit to Maoz on Codepen (https://codepen.io/Manoz/) for this
+    animation. Find at: https://codepen.io/Manoz/pen/pydxK
+*/
+
+.load-wrapp {
+    /*float: left;*/
+    /*margin: 0 5px 5px 0;*/
+/*    margin-top: 25px;*/
+    /*padding: 10px;*/
+/*    border-radius: 5px;
+    text-align: center;
+    background-color: #F2FCFE;
+    border: 1px solid #dadada;
+    border-radius: 10px;
+    border-bottom-left-radius: 0px;
+    animation: bounce 500ms linear both;
+    animation-delay: .2s;*/
+}
+
+/*.load-wrapp p {padding: 0 0 20px;}*/
+/*.load-wrapp:last-child {margin-left: 15px;}*/
+
+.line {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 15px;
+    background-color: #62bcce;
+    margin: 2px;
+    margin-bottom: 13px;
+}
+
+.load-3 .line:nth-last-child(1) {animation: loadingC .6s .1s linear infinite;}
+.load-3 .line:nth-last-child(2) {animation: loadingC .6s .2s linear infinite;}
+.load-3 .line:nth-last-child(3) {animation: loadingC .6s .3s linear infinite;}
+
+@keyframes loadingC {
+    0 {transform: translate(0,0);}
+    50% {transform: translate(0,15px);}
+    100% {transform: translate(0,0);}
+}

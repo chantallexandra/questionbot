@@ -1,25 +1,39 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import ChatBlock from './component/chatBlock';
+import Welcome from './component/welcome';
+import './static/styles/App.css';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      chatState: "suspended", // chat state can be 'suspended' or 'active'
+      chatnodes: ""
+    }
+  }
+
+  exit = () =>{
+    // remove any saved chat nodes
+    this.setState({chatnodes: [], chatState: "suspended"});
+  }
+
+  minimize = (nodes) => {
+    // save the state of the nodes when minimizing the chat
+    this.setState({chatnodes: nodes, chatState: "suspended"});
+  }
+
+  startChat = () => {
+    this.setState({chatState: "active"})
+  }
+
   render() {
+
+    var display = this.state.chatState === "active" ? <ChatBlock nodes={this.state.chatnodes} minimize={this.minimize} exit={this.exit}/> : 
+                                                      <Welcome startChat={this.startChat}/>
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div className="content">
+        {display}
       </div>
     );
   }

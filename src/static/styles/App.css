@@ -1,0 +1,60 @@
+body, html, #root{
+	width: 100%;
+	height: 100%;
+	font-family:  sans-serif;
+  /*background: #87CEEB;*/
+  color: #9e9e9e;
+  font-weight: 300;
+  overflow: hidden;
+}
+
+.content{
+	width: 100%;
+	height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.bottom-stick{
+	display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+}
+
+/*  
+    ------------------------
+          Welcome Page 
+    ------------------------
+*/
+
+.introduction{
+  max-width: 500px;
+  text-align: justify;
+}
+
+.chat-button{
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-color: #026a81;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: .8;
+  transition: .3s;
+  margin: auto;
+}
+
+.chat-button:hover{
+  opacity: 1;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+#icon-credit{
+  position: absolute;
+  right: 15px;
+  bottom: 0;
+}
