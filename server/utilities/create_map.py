@@ -64,7 +64,7 @@ with open('country_code.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     next(csv_reader)
     for row in csv_reader:
-        unique_mapping[row[1].lower()] = "country"
+        unique_mapping[row[1].lower()] = "country_name"
 
 
 with open('zomato.csv') as csv_file:
