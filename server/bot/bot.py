@@ -2,7 +2,7 @@ import re
 from neo4j import GraphDatabase
 from textblob import TextBlob
 import mysql.connector
-from map import Map
+from bot.map import Map
 '''
     Algorithm
     1. Strip syntactic markers such as "a" and "the"
@@ -53,7 +53,6 @@ class Mapper:
         matching_attribute = Map.mapping_table.get(token)
         # if the token has a matching attribute within map, find the corresponding table
         if matching_attribute:
-            print(1)
             # match the corresponding table to the attribute
             result = self.session.run("MATCH (t:Table)-[:HAS_ATTRIBUTE]->(:Attribute {value:{attribute}}) RETURN t", {"attribute": matching_attribute, "token": token})
             # use results.peek() because we only want the first result
@@ -72,26 +71,29 @@ class Mapper:
             label, = node.labels
             # if it is a synonym, find the corresponding table
             if label == "Synonym":
-                print(2)
                 synonym = list(node.values())[0]
-                # find the corresponding table and attribute
+                # find the corresponding table(s) and attribute
                 result = self.session.run("MATCH (:Synonym {value:{synonym}})-[:IS_LIKE]->(a:Attribute)<-[:HAS_ATTRIBUTE]-(t:Table) RETURN a,t",{"synonym": synonym})
                 if result.peek() and result.peek().get('a') and result.peek().get('t'):
-                    matching_attribute = list(result.peek().get('a').values())[0]
-                    matching_table = list(result.peek().get('t').values())[0]
-                    all_matches.append((matching_table, matching_attribute, False))
+                    table_iterator = result.records()
+                    while result.peek():
+                        curr_node = next(table_iterator)
+                        matching_attribute = list(curr_node.get('a').values())[0]
+                        matching_table = list(curr_node.get('t').values())[0]
+                        all_matches.append((matching_table, matching_attribute, False))
             elif label == "Attribute":
-                print(3)
                 attribute = list(node.values())[0]
-                # find the corresponding table the attribute belongs to
+                # find the corresponding table(s) the attribute belongs to
                 result = self.session.run("MATCH (t:Table)-[:HAS_ATTRIBUTE]->(:Attribute {value:{attribute}}) RETURN t",{"attribute": attribute})
                 # use results.peek() because we only want the first result
                 if result.peek() and result.peek().get('t'):
-                    # extract the table name from the result
-                    matching_table = list(result.peek().get('t').values())[0]
-                    all_matches.append((matching_table, attribute, False))
+                    table_iterator = result.records()
+                    while result.peek():
+                        curr_node = next(table_iterator)
+                        # extract the table name from the result
+                        matching_table = list(curr_node.get('t').values())[0]
+                        all_matches.append((matching_table, attribute, False))
             elif label == "Table":
-                print(4)
                 table = list(node.values())[0]
                 all_matches.append((table, False, False))
         return all_matches
@@ -115,4 +117,8 @@ class MySQL:
         csr.execute(query)
         rslt = csr.fetchall()
         return rslt
+
+# Main Function - Controls the flow
+class Get_Response:
+    def __init__(self, sentence):
 
