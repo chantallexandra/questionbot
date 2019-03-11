@@ -1,8 +1,9 @@
 import re
 from neo4j import GraphDatabase
-from textblob import TextBlob
+from textblob import TextBlob, Word
 import mysql.connector
 from bot.map import Map
+from bot.sql_templates import Templates
 '''
     Algorithm
     1. Strip syntactic markers such as "a" and "the"
@@ -11,25 +12,27 @@ from bot.map import Map
 
 '''
 
-class Parser:
-    def __init__(self, grouping):
-        self.grouping = grouping
-
-    # Remove all whitespace and punctuation from question
-    # Put words into lowercase
-    def parse_word(self):
-        # matches unicode word characters
-        return re.findall("[\w']", self.grouping.lower())
-
 
 class Tokenizer:
     def __init__(self):
         pass
 
-    # Returns a tagged version of tokens
-    def tag(self, tokens):
+    # Returns a tagged version of the tokens
+    @classmethod
+    def tag(cls, tokens):
         sentence = TextBlob(tokens)
         return sentence.tags
+
+    # Returns a tagged version of the lemmatized tokens
+    @classmethod
+    def lemmatize(cls, tokens):
+        sentence = TextBlob(tokens)
+        words = sentence.words
+        lemmatized = ""
+        for word in words:
+            lemmatized += Word(word).lemmatize() + " "
+        return lemmatized[:-1]
+
 
 class Mapper:
     def __init__(self):
@@ -73,7 +76,7 @@ class Mapper:
             if label == "Synonym":
                 synonym = list(node.values())[0]
                 # find the corresponding table(s) and attribute
-                result = self.session.run("MATCH (:Synonym {value:{synonym}})-[:IS_LIKE]->(a:Attribute)<-[:HAS_ATTRIBUTE]-(t:Table) RETURN a,t",{"synonym": synonym})
+                result = self.session.run("MATCH (:Synonym {value:{synonym}})-[:IS_LIKE]->(a:Attribute)<-[:HAS_ATTRIBUTE]-(t:Table) RETURN a,t", {"synonym": synonym})
                 if result.peek() and result.peek().get('a') and result.peek().get('t'):
                     table_iterator = result.records()
                     while result.peek():
@@ -84,7 +87,7 @@ class Mapper:
             elif label == "Attribute":
                 attribute = list(node.values())[0]
                 # find the corresponding table(s) the attribute belongs to
-                result = self.session.run("MATCH (t:Table)-[:HAS_ATTRIBUTE]->(:Attribute {value:{attribute}}) RETURN t",{"attribute": attribute})
+                result = self.session.run("MATCH (t:Table)-[:HAS_ATTRIBUTE]->(:Attribute {value:{attribute}}) RETURN t", {"attribute": attribute})
                 # use results.peek() because we only want the first result
                 if result.peek() and result.peek().get('t'):
                     table_iterator = result.records()
@@ -98,7 +101,6 @@ class Mapper:
                 all_matches.append((table, False, False))
         return all_matches
 
-
     # find the corresponding attribute to a synonym
     def synonym_to_attribute(self):
         pass
@@ -107,9 +109,125 @@ class Mapper:
     def attribute_to_table(self):
         pass
 
+
 class MySQL:
     def __init__(self):
         self.cnx = mysql.connector.connect(user='root', database='zomato')
+
+    # choose which template should be used to create the query
+    def choose_template(self, tables, columns, values):
+        if tables == 1:
+            if columns == 0:
+                if values == 0:
+                    return "temp1"
+                elif values == 1:
+                    return "temp2"
+                elif values == 2:
+                    return "temp3"
+                else:
+                    return -1
+            elif columns == 1:
+                if values == 0:
+                    return "temp4"
+                elif values == 1:
+                    return "temp5"
+                elif values == 2:
+                    return "temp6"
+                else:
+                    return -1
+            elif columns == 2:
+                if values == 0:
+                    return "temp7"
+                else:
+                    return -1
+            else:
+                return -1
+        elif tables == 2:
+            if columns == 0:
+                if values == 0:
+                    return "temp8"
+                elif values == 1:
+                    return "temp9"
+                elif values == 2:
+                    return "temp10"
+                else:
+                    return -1
+            elif columns == 1:
+                if values == 0:
+                    return "temp11"
+                elif values == 1:
+                    return "temp12"
+                elif values == 2:
+                    return "temp13"
+                else:
+                    return -1
+            elif columns == 2:
+                if values == 0:
+                    return "temp14"
+                elif values == 1:
+                    return "temp15"
+                elif values == 2:
+                    return "temp16"
+                else:
+                    return -1
+            else:
+                return -1
+
+        elif tables == 3:
+            if columns == 0:
+                if values == 0:
+                    return "temp17"
+                else:
+                    return -1
+            elif columns == 1:
+                if values == 0:
+                    return "temp18"
+                elif values == 1:
+                    return "temp19"
+                elif values == 2:
+                    return "temp20"
+                else:
+                    return -1
+            elif columns == 2:
+                if values == 1:
+                    return "temp21"
+                else:
+                    return -1
+            else:
+                return -1
+        else:
+            return -1
+
+    def insert_into_template(self, template, tables, columns, values):
+        insertions = {}
+        # tables
+        if len(tables) == 1:
+            insertions['table'] = tables[0]
+        elif len(tables) > 1:
+            i = 0
+            while i < len(tables):
+                var = 'table' + str(i + 1)
+                insertions[var] = tables[i]
+                i += 1
+        if len(columns) == 1:
+            insertions['column'] = columns[0]
+        elif len(columns) > 1:
+            i = 0
+            while i < len(columns):
+                var = 'column' + str(i + 1)
+                insertions[var] = columns[i]
+                i += 1
+        if len(values) == 1:
+            insertions['attribute'] = values[0][0]
+            insertions['value'] = values[0][1]
+        elif len(values) > 1:
+            i = 0
+            while i < len(values):
+                insertions['attribute' + str(i+1)] = values[i][0]
+                insertions['value' + str(i+1)] = values[i][1]
+                i += 1
+        return template.safe_substitute(insertions)
+
 
     # returns the result of a query run on the MySQL database
     def run_query(self, query):
@@ -118,7 +236,48 @@ class MySQL:
         rslt = csr.fetchall()
         return rslt
 
+
 # Main Function - Controls the flow
-class Get_Response:
+class Bot:
     def __init__(self, sentence):
+        self.sentence = sentence
+        self.tagged = Tokenizer.tag(sentence)
+        self.lemmatized = Tokenizer.lemmatize(sentence)
+        self.lemmatized_tagged = Tokenizer.tag(self.lemmatized)
+
+    # returns a list of the responses from the SQL query
+    def get_response(self):
+        mapper = Mapper()
+        # the tables to select from
+        tables = set()
+        # the attributes to select
+        attributes = set()
+        # the values to select with the associated attribute in the form (attribute, value)
+        values = set()
+        for word in self.lemmatized.split():
+            # rslt[0] is in the form (table, attribute, value)
+            rslt = mapper.match_label(word)
+            print(rslt)
+            if rslt:
+                rslt = rslt[0]
+                if rslt[0]:
+                    # add to the tables
+                    tables.add(rslt[0])
+                if rslt[1]:
+                    if rslt[2]:
+                        # if there is a corresponding attribute, add to the values table
+                        values.add((rslt[1], rslt[2]))
+                    else:
+                        attributes.add(rslt[1])
+        print(tables, attributes, values)
+        database = MySQL()
+        tables = list(tables)
+        attributes = list(attributes)
+        values = list(values)
+        template = database.choose_template(len(tables), len(attributes), len(values))
+        if template != -1:
+            print(template)
+            query = database.insert_into_template(getattr(Templates, template), tables, attributes, values)
+            print(query)
+            print(database.run_query(query))
 

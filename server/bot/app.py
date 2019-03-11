@@ -1,6 +1,7 @@
 from flask import Flask, json, request
 from flask_cors import CORS
 from textblob import TextBlob
+from bot.bot import Bot
 from utilities.yes_no_trainer import PosOrNeg
 
 app = Flask(__name__)
@@ -21,10 +22,11 @@ def index():
 
 @app.route('/question')
 def question():
-    sentence = TextBlob(request.args.get("question"))
+    sentence = request.args.get("question").lower()
+    answer = Bot(sentence)
     data = {
-        "question": sentence.lower().raw,
-        "answer": ["Pizza Hut", "Pizza Pizza", "Little Cesears"]
+        "question": sentence,
+        "answer": answer.get_response()
     }
     response = app.response_class(
         response=json.dumps(data),
