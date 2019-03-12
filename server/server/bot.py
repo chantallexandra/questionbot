@@ -1,4 +1,3 @@
-import re
 from neo4j import GraphDatabase
 from textblob import TextBlob, Word
 import mysql.connector
