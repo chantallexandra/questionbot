@@ -1,8 +1,8 @@
 from neo4j import GraphDatabase
 from textblob import TextBlob, Word
 import mysql.connector
-from bot.map import Map
-from bot.sql_templates import Templates
+from server.map import Map
+from server.sql_templates import Templates
 '''
     Algorithm
     1. Strip syntactic markers such as "a" and "the"
@@ -82,7 +82,7 @@ class Mapper:
                         curr_node = next(table_iterator)
                         matching_attribute = list(curr_node.get('a').values())[0]
                         matching_table = list(curr_node.get('t').values())[0]
-                        all_matches.append((matching_table, matching_attribute, False))
+                        all_matches.append((matching_table, matching_attribute, None))
             elif label == "Attribute":
                 attribute = list(node.values())[0]
                 # find the corresponding table(s) the attribute belongs to
@@ -94,10 +94,10 @@ class Mapper:
                         curr_node = next(table_iterator)
                         # extract the table name from the result
                         matching_table = list(curr_node.get('t').values())[0]
-                        all_matches.append((matching_table, attribute, False))
+                        all_matches.append((matching_table, attribute, None))
             elif label == "Table":
                 table = list(node.values())[0]
-                all_matches.append((table, False, False))
+                all_matches.append((table, None, None))
         return all_matches
 
     # find the corresponding attribute to a synonym
@@ -115,88 +115,13 @@ class MySQL:
 
     # choose which template should be used to create the query
     def choose_template(self, tables, columns, values):
-        if tables == 1:
-            if columns == 0:
-                if values == 0:
-                    return "temp1"
-                elif values == 1:
-                    return "temp2"
-                elif values == 2:
-                    return "temp3"
-                else:
-                    return -1
-            elif columns == 1:
-                if values == 0:
-                    return "temp4"
-                elif values == 1:
-                    return "temp5"
-                elif values == 2:
-                    return "temp6"
-                else:
-                    return -1
-            elif columns == 2:
-                if values == 0:
-                    return "temp7"
-                else:
-                    return -1
-            else:
-                return -1
-        elif tables == 2:
-            if columns == 0:
-                if values == 0:
-                    return "temp8"
-                elif values == 1:
-                    return "temp9"
-                elif values == 2:
-                    return "temp10"
-                else:
-                    return -1
-            elif columns == 1:
-                if values == 0:
-                    return "temp11"
-                elif values == 1:
-                    return "temp12"
-                elif values == 2:
-                    return "temp13"
-                else:
-                    return -1
-            elif columns == 2:
-                if values == 0:
-                    return "temp14"
-                elif values == 1:
-                    return "temp15"
-                elif values == 2:
-                    return "temp16"
-                else:
-                    return -1
-            else:
-                return -1
-
-        elif tables == 3:
-            if columns == 0:
-                if values == 0:
-                    return "temp17"
-                else:
-                    return -1
-            elif columns == 1:
-                if values == 0:
-                    return "temp18"
-                elif values == 1:
-                    return "temp19"
-                elif values == 2:
-                    return "temp20"
-                else:
-                    return -1
-            elif columns == 2:
-                if values == 1:
-                    return "temp21"
-                else:
-                    return -1
-            else:
-                return -1
+        if 1 <= tables <= 3 and 0 <= columns <= 2 and 0 <= values <= 2:
+            return "temp" + str(tables) + str(columns) + str(values)
         else:
             return -1
 
+    # takes a Template and list of tables, columns, and values
+    # returns a string with the values inserted
     def insert_into_template(self, template, tables, columns, values):
         insertions = {}
         # tables
@@ -244,8 +169,7 @@ class Bot:
         self.lemmatized = Tokenizer.lemmatize(sentence)
         self.lemmatized_tagged = Tokenizer.tag(self.lemmatized)
 
-    # returns a list of the responses from the SQL query
-    def get_response(self):
+    def generate_query(self):
         mapper = Mapper()
         # the tables to select from
         tables = set()
@@ -277,6 +201,17 @@ class Bot:
         if template != -1:
             print(template)
             query = database.insert_into_template(getattr(Templates, template), tables, attributes, values)
-            print(query)
-            print(database.run_query(query))
+            return query, attributes
+        else:
+            return None, None
+
+    # returns a list of the responses from the SQL query
+    def get_response(self, query):
+        if query:
+            database = MySQL()
+            rslt = database.run_query(query)
+            # convert query responses to strings
+            rslt = [tuple(str(x) for x in tup) for tup in rslt]
+            return rslt
+
 
