@@ -35,7 +35,34 @@ const BotChatBubble = function({response, dataType}) {
   }else if( dataType === "spellcheck"){
     styledText = <p>Did you mean &quot;{compareTexts(response.input, response.output)}&quot;?</p>;
   }else{
-    (response.answer).forEach((element) => {styledText.push(<p className="table-response">{element}</p>)});
+    if( response.answer !== null){
+      // Push the generated Query
+      styledText.push(<p className="query"><span className="query-title">Generated Query:</span> {response.query}</p>)
+
+      var tableHead = []
+      var columns = []
+      console.log(response.columns);
+      console.log("HERE")
+      for (let column of response.columns){
+          columns.push(<th className="table-response">{column}</th>)
+      }
+      tableHead.push(<tr>{columns}</tr>)
+      var tableBody = []
+      // Only show the first 25 responses
+      for (let arr of (response.answer).slice(0,25)){
+        let levelArr = []
+        for (let element of arr){
+          levelArr.push(<td className="table-response">{element}</td>);
+        }
+        tableBody.push(<tr>{levelArr}</tr>);
+      }
+
+      styledText.push(<table><thead>{tableHead}</thead><tbody>{tableBody}</tbody></table>)
+    }else{
+      styledText.push(<p>Sorry, there were no results for that!</p>)
+    }
+
+    // ((response.answer).slice(0,25)).forEach((element) => {styledText.push(<tr className="table-response">{element.for}</tr>)});
     question = <div className="question-box">
                   <p className="format-question">{response.question}</p>
                </div>

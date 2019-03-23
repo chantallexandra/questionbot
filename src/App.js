@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      chatState: "suspended", // chat state can be 'suspended' or 'active'
+      chatState: "active", // chat state can be 'suspended' or 'active'
       chatnodes: ""
     }
   }

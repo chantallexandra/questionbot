@@ -18,34 +18,32 @@ class ChatBlock extends Component {
   // check the spalling of a users question
   checkSpelling = (text) => {
     this.setBotAnswer(<LoadingBubbles />, "load");
-    setTimeout(()=>{
-      fetch(`http://localhost:5000/spellcheck?spell=${text}`)
-      .then(response => response.json())
-      .then(response => {
-        this.setState(function(prevState){
-              let chatnodes = prevState.chatnodes;
-              chatnodes.pop();
-              return {chatnodes: chatnodes, questionForms: [response.input, response.output]}
-        })
-        // check if the spelling is okay or not
-        if(response.input === response.output){
-          // if there are no spelling mistakes, we can look for an answer
-          this.getResponse(response.input);
-        }else{
-          this.setBotAnswer(response, "spellcheck");
-          // if there is spelling mistakes, we are going to look for a spell response
-          this.setState({responseState: "spell response"});
-        }
-      })
-      .catch(err => {
-        this.setState(function(prevState){
+    fetch(`http://localhost:5000/spellcheck?spell=${text}`)
+    .then(response => response.json())
+    .then(response => {
+      this.setState(function(prevState){
             let chatnodes = prevState.chatnodes;
             chatnodes.pop();
-            return {chatnodes: chatnodes}
-        })
-        this.setBotAnswer("Sorry, an error occured while trying to answer your question.", "text");
+            return {chatnodes: chatnodes, questionForms: [response.input, response.output]}
+      });
+      // check if the spelling is okay or not
+      if(response.input === response.output){
+        // if there are no spelling mistakes, we can look for an answer
+        this.getResponse(response.input);
+      }else{
+        this.setBotAnswer(response, "spellcheck");
+        // if there is spelling mistakes, we are going to look for a spell response
+        this.setState({responseState: "spell response"});
+      }
+    })
+    .catch(err => {
+      this.setState(function(prevState){
+          let chatnodes = prevState.chatnodes;
+          chatnodes.pop();
+          return {chatnodes: chatnodes}
       })
-  }, 1000)
+      this.setBotAnswer("Sorry, an error occured while trying to answer your question.", "text");
+    })
   }
 
   // check if text is a positive (yes) or negative (no) statement
@@ -87,36 +85,24 @@ class ChatBlock extends Component {
 
   getResponse = (question) => {
     this.setBotAnswer(<LoadingBubbles />, "load");
-    setTimeout(()=>{
     // First check spelling
-      fetch(`http://localhost:5000?question=${question}`)
-      .then(response => response.json())
-      .then(response => {
-
-      
-      // .then(response => response.json())
-      // .then((response) => {
-      //     console.log(response.answer)
-          this.setState(function(prevState){
-            let chatnodes = prevState.chatnodes;
-            chatnodes.pop();
-            return {chatnodes: chatnodes}
-          })
-      //     // Wait 150ms after dots disappear before displaying the answer
-      //     setTimeout(()=>{
-            this.setBotAnswer(response, "response");
-      //     }, 200)
-      }).catch((err) => {
-          this.setState(function(prevState){
-            let chatnodes = prevState.chatnodes;
-            chatnodes.pop();
-            return {chatnodes: chatnodes}
-          })
-          setTimeout(()=>{
-            this.setBotAnswer("Sorry, an error occured while trying to answer your question.", "text");
-          }, 200)
-      })
-  }, 1000)
+    fetch(`http://localhost:5000/question?question=${question}`)
+    .then(response => response.json())
+    .then(response => {
+        this.setState(function(prevState){
+          let chatnodes = prevState.chatnodes;
+          chatnodes.pop();
+          return {chatnodes: chatnodes}
+        });
+        this.setBotAnswer(response, "response");
+    }).catch((err) => {
+        this.setState(function(prevState){
+          let chatnodes = prevState.chatnodes;
+          chatnodes.pop();
+          return {chatnodes: chatnodes}
+        })
+        this.setBotAnswer("Sorry, an error occured while trying to answer your question.", "text");
+    })
     
   }
 
@@ -154,12 +140,16 @@ class ChatBlock extends Component {
     // wait one second before starting to respond
     setTimeout(()=>{
       // check if the bot is looking for a question or a response to a spelling correction
-      if(this.state.responseState === "question"){
-        // Call function to check spelling
-        this.checkSpelling(question);
-      }else{
-        this.checkYesOrNo(question);
-      }
+      // UNCOMMENT THE LINES BELOW TO CHECK FOR SPELLING 
+      // if(this.state.responseState === "question"){
+      //   // Call function to check spelling
+      //   this.checkSpelling(question);
+      // }else{
+      //   this.checkYesOrNo(question);
+      // }
+
+      // COMMENT THE LINE BELOW AND UNCOMMENT THE LINES ABOVE TO CHECK FOR SPELLING
+      this.getResponse(question);
       
     }, 1000);
 

@@ -1,8 +1,8 @@
 .chat-widget{
-  width: 500px;
+  width: 600px;
   height: 90%;
-  min-height: 200px;
-  max-height: 500px;
+  min-height: 300px;
+  max-height: 570px;
   box-shadow: 2px 10px 40px rgba(22,20,19,0.4);
   border-radius: 20px;
   margin: auto;
@@ -145,21 +145,28 @@ span.changed{
   background-color: #ffff0040;
 }
 
-/*  
-    ----------------------------
-         Yes and No buttons 
-    ----------------------------
-*/
-
-.button-yes, .button-no{
-  margin-top: 10px;
-  border: 1px solid #dadada;
-  border-radius: 5px;
+.text-bubble table{
+  width: 100%;
 }
 
-.button-yes, .button-no:focus{
-  outline: none;
+.text-bubble table thead{
+  text-align: left;
 }
+
+.query{
+  font-size: 14px;
+  text-align: center;
+  padding: 25px 0px;
+  font-family: 'Source Code Pro';
+}
+
+.query-title{
+  font-weight: 600;
+  font-family: sans-serif;
+}
+
+
+
 /*  
     ------------------------
         Bottom Section 
@@ -222,3 +229,5 @@ path.active{
   85.49% { transform: matrix3d(0.999, 0, 0, 0, 0, 0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
   100% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); } 
 }
+
+@import url("https://fonts.googleapis.com/css?family=Source+Code+Pro");
