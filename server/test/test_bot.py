@@ -1,5 +1,5 @@
 import unittest
-from bot.bot import Mapper, Tokenizer
+from server.bot import Mapper, Tokenizer
 
 
 class TestBot(unittest.TestCase):
