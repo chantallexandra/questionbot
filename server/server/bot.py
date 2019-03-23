@@ -20,7 +20,15 @@ class Tokenizer:
     @classmethod
     def tag(cls, tokens):
         sentence = TextBlob(tokens)
+        print(sentence.tags)
         return sentence.tags
+
+    # Returns the extracted noun phrase from the tokens
+    @classmethod
+    def noun_phrase(cls, tokens):
+        sentence = TextBlob(tokens)
+        return sentence.noun_phrases
+
 
     # Returns a tagged version of the lemmatized tokens
     @classmethod
@@ -31,6 +39,22 @@ class Tokenizer:
         for word in words:
             lemmatized += Word(word).lemmatize() + " "
         return lemmatized[:-1]
+
+    # Returns a list of the noun-phrases, nouns, and adjectives
+    @classmethod
+    def noun_adj_extractor(cls, sentence):
+        noun_adj = []
+        tagged = Tokenizer.tag(sentence)
+        noun_p = Tokenizer.noun_phrase(sentence)
+        for np in noun_p:
+            noun_adj.append(np)
+
+        for word,pos in tagged:
+            # check if the word is a noun or adjective
+            if pos == "NN" or pos =="JJ":
+                noun_adj.append(word)
+        print(noun_adj)
+        return noun_adj
 
 
 class Mapper:
@@ -165,9 +189,11 @@ class MySQL:
 class Bot:
     def __init__(self, sentence):
         self.sentence = sentence
-        self.tagged = Tokenizer.tag(sentence)
-        self.lemmatized = Tokenizer.lemmatize(sentence)
-        self.lemmatized_tagged = Tokenizer.tag(self.lemmatized)
+        # self.tagged = Tokenizer.tag(sentence)
+        self.lemmatized = Tokenizer.lemmatize(self.sentence)
+        self.query_terms = Tokenizer.noun_adj_extractor(self.lemmatized);
+
+
 
     def generate_query(self):
         mapper = Mapper()
@@ -177,7 +203,7 @@ class Bot:
         attributes = set()
         # the values to select with the associated attribute in the form (attribute, value)
         values = set()
-        for word in self.lemmatized.split():
+        for word in self.query_terms:
             # rslt[0] is in the form (table, attribute, value)
             rslt = mapper.match_label(word)
             print(rslt)
@@ -192,6 +218,10 @@ class Bot:
                         values.add((rslt[1], rslt[2]))
                     else:
                         attributes.add(rslt[1])
+        # Remove elements from attributes which are also in values
+        for a,v in values:
+            if a in attributes:
+                attributes.remove(a)
         print(tables, attributes, values)
         database = MySQL()
         tables = list(tables)

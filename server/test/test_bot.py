@@ -29,24 +29,23 @@ class TestBot(unittest.TestCase):
         self.assertEqual(self.mapper.match_label("canada"), [('code', 'country_name', 'canada')])
 
         # Matching Synonyms
-        self.assertEqual(self.mapper.match_label("position"), [('restaurants', 'locality', False)])
-        self.assertEqual(self.mapper.match_label("street"), [('restaurants', 'address', False)])
+        self.assertEqual(self.mapper.match_label("position"), [('restaurants', 'locality', None)])
+        self.assertEqual(self.mapper.match_label("street"), [('restaurants', 'address', None)])
 
         # Matching Attributes
-        self.assertEqual(self.mapper.match_label("city"), [('restaurants', 'city', False)])
-        self.assertEqual(self.mapper.match_label("restaurant"), [('restaurants', 'restaurant_name', False)])
-        self.assertEqual(self.mapper.match_label("country"), [('code', 'country_name', False)])
-        self.assertEqual(self.mapper.match_label("food"), [('cuisines', 'cuisine', False)])
+        self.assertEqual(self.mapper.match_label("city"), [('restaurants', 'city', None)])
+        self.assertEqual(self.mapper.match_label("restaurant"), [('restaurants', 'restaurant_name', None)])
+        self.assertEqual(self.mapper.match_label("country"), [('code', 'country_name', None)])
+        self.assertEqual(self.mapper.match_label("food"), [('cuisines', 'cuisine', None)])
 
         # Matching Tables
-        self.assertEqual(self.mapper.match_label("restaurants"), [('restaurants', False, False)])
-        self.assertEqual(self.mapper.match_label("code"), [('code', False, False)])
-        self.assertEqual(self.mapper.match_label("cuisines"), [('cuisines', False, False)])
+        self.assertEqual(self.mapper.match_label("restaurants"), [('restaurants', None, None)])
+        self.assertEqual(self.mapper.match_label("code"), [('code', None, None)])
+        self.assertEqual(self.mapper.match_label("cuisines"), [('cuisines', None, None)])
 
         # Matching Multiple
-        self.assertEqual(self.mapper.match_label("average"), [('restaurants', 'rating_text', 'average'), ('restaurants', 'average_cost_for_two', False)])
-        # self.assertEqual(self.mapper.match_label("restaurant_id"), [('restaurants', 'restaurant_id', False),('cuisines', 'restaurant_id', False)])
-        self.assertEqual(self.mapper.match_label("country_code"), [('code', 'country_code', False), ('restaurants', 'country_code', False)])
+        self.assertEqual(self.mapper.match_label("average"), [('restaurants', 'rating_text', 'average'), ('restaurants', 'average_cost_for_two', None)])
+        self.assertEqual(self.mapper.match_label("country_code"), [('code', 'country_code', None), ('restaurants', 'country_code', None)])
 
     # TEST MySQL
     def test_choose_template(self):
