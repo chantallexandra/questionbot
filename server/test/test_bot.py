@@ -1,7 +1,7 @@
 import unittest
-from server.bot import Mapper, Tokenizer, MySQL
+from server.bot import Tokenizer, MySQL
 from string import Template
-
+from server.mapper import Mapper
 
 class TestBot(unittest.TestCase):
 
