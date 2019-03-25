@@ -62,8 +62,6 @@ def insert_synonyms():
                     session.run("MERGE (:Synonym {value: {syn}})", {"syn": similar_word})
                     session.run("MATCH (attribute:Attribute {value: {att}}), (synonym:Synonym {value: {syn}}) MERGE (synonym)-[:IS_LIKE]->(attribute)",{"att": attribute_name, "syn": similar_word})
 
-insert_tables()
-insert_attributes()
 insert_synonyms()
 
 

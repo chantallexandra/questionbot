@@ -11,7 +11,7 @@ Average Cost for two,cost,average,
 Currency,,,
 Has Table booking,,,
 Has Online delivery,,,
-Is delivering now,,,
+Is delivering now,delivery,delivering,deliver
 Switch to order menu,,,
 Price range,,,
 Aggregate rating,rating,,
