@@ -8,10 +8,16 @@ const Welcome = function({startChat}) {
             <p>Welcome to my undergraduate capstone project! This project was to design a query platform where users can ask natural
             language questions which are then transformed into SQL. This project has a backend MySQL database from Zomato,
              a restaurant search and discovery service (view the dataset <a href="https://www.kaggle.com/shrutimehta/zomato-restaurants-data">here</a>).
-            You can read all about my project <a href="">here</a>.</p>
+            You can read all about my project <a href="https://docs.google.com/document/d/1QkAHASgwy4FDjfv_ayqTMMU3lFfY0fvXD_mBXJDqVaE/edit?usp=sharing">here</a>.</p>
 
              <p>Click the chat button below to ask my database a question!</p>
-             <p>Some good questions to ask are: &quot;What are the restaurants in Athens?&quot;</p>
+             <p><u>Some good questions to ask are:</u><br/>
+             &quot;What are the Italian restaurants?&quot; <br/>
+             &quot;What are the restaurants in Athens?&quot; <br/>
+             &quot;Which Chinese restaurants are in Mumbai?&quot; <br/>
+             &quot;Which restaurants have an excellent rating?&quot; <br/>
+             &quot;What are the cities in Canada?&quot; <br/>
+             &quot;What restaurants are in Australia?&quot;</p>
         </div>
              <div className="chat-button" onClick={startChat}>
               <svg style={{width: "30px", height: "30px"}} viewBox="0 0 24 24">
