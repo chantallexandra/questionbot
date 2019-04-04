@@ -54,7 +54,7 @@ class Templates:
     # two column, three tables
     temp320 = Template("SELECT DISTINCT $column1, #column2 FROM $table1 NATURAL JOIN $table2 NATURAL JOIN $table3")
     # one column, three tables, one attribute-value pair (AND)
-    temp311 = Template("SELECT DISTINCT $column FROM $table1 NATURAL JOIN $table2 NATURAL JOIN $table3 WHERE $attribute='value'")
+    temp311 = Template("SELECT DISTINCT $column FROM $table1 NATURAL JOIN $table2 NATURAL JOIN $table3 WHERE $attribute='$value'")
     # one column, three tables, two attribute-value pairs (AND)
     temp312 = Template("SELECT DISTINCT $column FROM $table1 NATURAL JOIN $table2 NATURAL JOIN $table3 WHERE $attribute1='$value1' AND $attribute2='$value2'")
     # two columns, three tables, one attribute-value pair (AND)

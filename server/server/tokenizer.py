@@ -14,6 +14,7 @@ class Tokenizer:
     @classmethod
     def noun_phrase(cls, tokens):
         sentence = TextBlob(tokens)
+        print(sentence.noun_phrases)
         return sentence.noun_phrases
 
     # Returns a tagged version of the lemmatized tokens
@@ -24,6 +25,7 @@ class Tokenizer:
         lemmatized = ""
         for word in words:
             lemmatized += Word(word).lemmatize() + " "
+        print(lemmatized)
         return lemmatized[:-1]
 
     # Returns a list of the noun-phrases, nouns, and adjectives
@@ -39,5 +41,5 @@ class Tokenizer:
             # check if the word is a noun or adjective
             if pos == "NN" or pos == "NNS" or pos == "NNP" or pos == "NNPS" or pos =="JJ" or pos == "JJR" or pos == "JJS":
                 noun_adj.append(word)
-        # print(noun_adj)
+        print(noun_adj)
         return noun_adj

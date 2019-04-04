@@ -1,7 +1,7 @@
 from server.mapper import Mapper
 from server.tokenizer import Tokenizer
 from server.sql_templates import Templates
-from server.mysql import MySQL
+from server.sql import MySQL
 
 
 # Controls the flow
@@ -21,7 +21,7 @@ class Bot:
         values = set()
         for word in self.query_terms:
             # rslt[0] is in the form (table, attribute, value)
-            rslt = Mapper.match_label(word)
+            rslt = mapper.match_label(word)
             # print(rslt)
             if rslt:
                 rslt = rslt[0]
@@ -38,7 +38,10 @@ class Bot:
         for a, v in values:
             if a in attributes:
                 attributes.remove(a)
-        # print(tables, attributes, values)
+        # if only 'code' and 'cuisines' were selected, need to also include 'restaurants'
+        if 'code' in tables and 'cuisines' in tables and 'restaurants' not in tables:
+            tables.add('restaurants')
+        print(tables, attributes, values)
         database = MySQL()
         tables = list(tables)
         attributes = list(attributes)

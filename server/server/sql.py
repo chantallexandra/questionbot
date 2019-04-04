@@ -42,6 +42,9 @@ class MySQL:
                 insertions['attribute' + str(i+1)] = values[i][0]
                 insertions['value' + str(i+1)] = values[i][1]
                 i += 1
+        # use safe_substitute instead of substitute so that the program does not throw
+        # an error if the wrong number of values are substituted in
+        print(template.safe_substitute(insertions))
         return template.safe_substitute(insertions)
 
     # returns the result of a query run on the MySQL database
