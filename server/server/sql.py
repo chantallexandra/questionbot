@@ -1,5 +1,6 @@
 import mysql.connector
 
+
 class MySQL:
     def __init__(self):
         self.cnx = mysql.connector.connect(user='root', database='zomato')

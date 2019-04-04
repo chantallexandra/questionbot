@@ -1,7 +1,7 @@
 ﻿Restaurant ID,,,
 Restaurant Name,name,restaurant,
 Country Code,,,
-City,,,
+City,town,,
 Address,street,location,
 Locality,position,,
 Locality Verbose,,,
