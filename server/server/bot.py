@@ -22,7 +22,6 @@ class Bot:
         for word in self.query_terms:
             # rslt[0] is in the form (table, attribute, value)
             rslt = mapper.match_label(word)
-            # print(rslt)
             if rslt:
                 rslt = rslt[0]
                 if rslt[0]:
@@ -41,14 +40,12 @@ class Bot:
         # if only 'code' and 'cuisines' were selected, need to also include 'restaurants'
         if 'code' in tables and 'cuisines' in tables and 'restaurants' not in tables:
             tables.add('restaurants')
-        print(tables, attributes, values)
         database = MySQL()
         tables = list(tables)
         attributes = list(attributes)
         values = list(values)
         template = database.choose_template(len(tables), len(attributes), len(values))
         if template != -1:
-            # print(template)
             query = database.insert_into_template(getattr(Templates, template), tables, attributes, values)
             return query, attributes
         else:

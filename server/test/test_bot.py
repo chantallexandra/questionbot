@@ -1,5 +1,6 @@
 import unittest
-from server.bot import Tokenizer, MySQL
+from server.tokenizer import Tokenizer
+from server.sql import MySQL
 from string import Template
 from server.mapper import Mapper
 
