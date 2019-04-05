@@ -9,10 +9,8 @@ CORS(app)
 
 @app.route('/')
 def index():
-    data = {
-        "question": "What are the pizza restaurants in Boston",
-        "answer": ["Pizza Hut", "Pizza Pizza", "Little Cesears"]
-    }
+    # return an empty data set
+    data = {}
     response = app.response_class(
         response=json.dumps(data),
         status=200,
