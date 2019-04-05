@@ -23,8 +23,6 @@ def question():
     sentence = request.args.get("question").lower()
     answer = Bot(sentence)
     query, columns = answer.generate_query()
-    print(query, columns)
-    print(answer.get_response(query))
     data = {
         "question": sentence,
         "columns": columns,
